@@ -47,6 +47,85 @@ client.on('ready', () => {//source
     }
   });
   
+
+                        client.on('message', message => { //bot
+                            if (message.content.startsWith(prefix + "bot")) {
+                            message.channel.send({
+                                embed: new Discord.RichEmbed()
+                                    .setAuthor(client.user.username,client.user.avatarURL)
+                                    .setThumbnail(client.user.avatarURL)
+                                    .setColor('RANDOM')
+                                    .setTitle('``F9 Bot`` ')
+                                    .addField('``Uptime``', [timeCon(process.uptime())], true)
+                                    .addField('``Ping``' , [`${Date.now() - message.createdTimestamp}` + 'MS'], true)
+                                    .addField('``RAM Usage``', `[${(process.memoryUsage().rss / 1048576).toFixed()}MB]`, true)
+                                    .addField('``servers``', [client.guilds.size], true)
+                                    .addField('``channels``' , `[ ${client.channels.size} ]` , true)
+                                    .addField('``Users``' ,`[ ${client.users.size} ]` , true)
+                                    .addField('``Name``' , `[ ${client.user.tag} ]` , true)
+                                    .addField('``ID``' , `[ ${client.user.id} ]` , true)
+                                          .addField('``Prefix``' , `[ ${prefix} ]` , true)
+                                          .addField('``Language``' , `[ Java Script ]` , true)
+
+                            })
+                        }
+                        });
+
+                        function timeCon(time) { //bot2
+                            let days = Math.floor(time % 31536000 / 86400)
+                            let hours = Math.floor(time % 31536000 % 86400 / 3600)
+                            let minutes = Math.floor(time % 31536000 % 86400 % 3600 / 60)
+                            let seconds = Math.round(time % 31536000 % 86400 % 3600 % 60)
+                            days = days > 9 ? days : '0' + days
+                            hours = hours > 9 ? hours : '0' + hours
+                            minutes = minutes > 9 ? minutes : '0' + minutes
+                            seconds = seconds > 9 ? seconds : '0' + seconds
+                            return `${days > 0 ? `${days}:` : ''}${(hours || days) > 0 ? `${hours}:` : ''}${minutes}:${seconds}`
+                        }
+
+
+
+
+
+client.on('message', message => { //clear
+    if(!message.channel.guild) return;
+ if(message.content.startsWith(prefix + 'clear')) {
+ if(!message.channel.guild) return message.channel.send('** :no_entry: - هذا الامر فقط للسيرفرات**').then(m => m.delete(5000));
+ if(!message.member.hasPermission('ADMINISTRATOR')) return      message.channel.send('** :no_entry: - ليس لديك برمشن adminstrator`' );
+ let args = message.content.split(" ").join(" ").slice(2 + prefix.length);
+ let request = `Requested By ${message.author.username}`;
+ message.channel.send(`**هل انت متأكد من حذف الشات؟**`).then(msg => {
+ msg.react('✅')
+ .then(() => msg.react('❌'))
+ .then(() =>msg.react('✅'))
+
+ let reaction1Filter = (reaction, user) => reaction.emoji.name === '✅' && user.id === message.author.id;
+ let reaction2Filter = (reaction, user) => reaction.emoji.name === '❌' && user.id === message.author.id;
+
+ let reaction1 = msg.createReactionCollector(reaction1Filter, { time: 12000 });
+ let reaction2 = msg.createReactionCollector(reaction2Filter, { time: 12000 });
+ reaction1.on("collect", r => {
+ message.channel.send(`سينحذف الشات ...`).then(m => m.delete(5000));
+ var msg;
+         msg = parseInt();
+
+       message.channel.fetchMessages({limit: msg}).then(messages => message.channel.bulkDelete(messages)).catch(console.error);
+       message.channel.sendMessage("", {embed: {
+         title: "`` تــــم حذف الشات ``",
+         color: 0x06DF00,
+         footer: {
+
+         }
+       }}).then(msg => {msg.delete(3000)});
+
+ })
+ reaction2.on("collect", r => {
+ message.channel.send(`**تم الغاء حذف الشات**`).then(m => m.delete(5000));
+ msg.delete();
+ })
+ })
+ }
+ });
   
   
   
